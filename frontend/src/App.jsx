@@ -1,9 +1,13 @@
 /* eslint-disable */
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import NotFound from './components/Not_found';
-import Singup from './components/Singup';
+import Signup from './components/Signup';
+import './App.css';
+
 
 import './assets/application.scss';
 
@@ -11,13 +15,15 @@ const App = () => {
   return (
     <Router>
       <div className="App">
-        <h1>Hexlet Chat</h1>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route>
+            <Route path="/" element={<Home />} />
+          </Route>
+          <Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/singup" element={<Singup />} />
-
         </Routes>
       </div>
     </Router >

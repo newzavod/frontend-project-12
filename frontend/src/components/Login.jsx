@@ -1,95 +1,111 @@
 /* eslint-disable */
 import React from 'react';
-import * as Yup from 'yup';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
-import '../App.scss';
 import { Formik } from 'formik';
+import * as yup from 'yup';
+import {
+  Button, Card, Col, Container, Form, Overlay, Row, FloatingLabel,
+} from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import avatar from '../assets/avatar.jpg';
+import Header from './Header';
 
-const SignupSchema = Yup.object().shape({
-  userName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  password: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-});
+function Login() {
+  const validationSchema = yup.object().shape({
+    name: yup.string()
+      .typeError('Должно быть строкой')
+      .min(3, 'Too Short!')
+      .max(12, 'Too Long!')
+      .required('Обязательно'),
+    password: yup.string()
+      .typeError('Должно быть строкой')
+      .min(4, 'Too Short')
+      .required('Обязательно'),
+  });
 
-const Login = () => (
-  <div>
-    <h1>Войти</h1>
-    <Formik
-      initialValues={{
-        userName: '',
-        password: '',
-      }}
-      validationSchema={SignupSchema}
-      onSubmit={values => {
-        // same shape as initial values
-        console.log(values);
-      }}
-    >
-      {({
-        handleSubmit,
-        handleChange,
-        handleBlur,
-        values,
-        touched,
-        isValid,
-        errors,
-      }) => (
-        <Form noValidate onSubmit={handleSubmit} >
-          <Row className="mb-3">
-            <Form.Group
-              as={Col}
-              md="4"
-              controlId="validationFormik101"
-            >
-              <Form.Label>user name</Form.Label>
-              <Form.Control
-                type="text"
-                name="userName"
-                placeholder="Ваш ник"
-                value={values.firstName}
-                onChange={handleChange}
-                isValid={touched.firstName && !errors.firstName}
-              />
-              {errors.userName && touched.userName ? (
-                <div>{errors.userName}</div>
-              ) : null}
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-          <Row className="mb-3">
-            <Form.Group
-              as={Col}
-              md="4"
-              controlId="validationFormik102"
-            >
-              <Form.Label>Пароль</Form.Label>
-              <Form.Control
-                type="text"
-                name="password"
-                placeholder="Пароль"
-                value={values.password}
-                onChange={handleChange}
-                isValid={touched.password && !errors.password}
-              />
-              {errors.password && touched.password ? (
-                <div>{errors.password}</div>
-              ) : null}
-            </Form.Group>
-          </Row>
-          <Button type="submit">ВОЙТИ</Button>
-        </Form>
-      )}
-    </Formik>
-  </div>
-);
+  return (
+    <>
+      <Header />
+      <Container fluid className="h-100">
+        <Row className="h-100 justify-content-center align-content-center">
+          <Col className="col-12 col-md-8">
+            <Card className="shadow-sm">
+              <Card.Body className="row p-5">
+                <Form>
+                  <Form.Group className="mb-3">
+                    <FloatingLabel
+                      label={'label.nickname'}
+                      className="mb-3 text-muted"
+                      controlId="username"
+                    >
+                      <div className="logo">
+                        <img src={avatar} alt="" />
+                      </div>
+                      <Formik
+                        initialValues={{
+                          name: '',
+                          password: '',
+                          confirmPassword: '',
+                        }}
+                        onSubmit={(values) => { console.log(values) }}
+                        validationSchema={validationSchema}
+                        validateOnBlur
+                      >
+                        {({ values, errors, touched, handleChange, handleBlur, isValid, handleSubmit, dirty }) => (
+                          <div className='from'>
+                            <p>
+                              <label htmlFor="name"></label>
+                              <br />
+                              <input
+                                className='input'
+                                placeholder='Имя пользователя'
+                                type='text'
+                                name='name'
+                                onChange={handleChange}
+
+                                onBlur={handleBlur}
+                                value={values.name}
+                              />
+                            </p>
+                            {touched.name && errors.name &&
+                              <p className={'error'}>{errors.name}</p>}
+                            <p>
+                              <label htmlFor={'password'}></label>
+                              <br />
+                              <input
+                                className={'input'}
+                                placeholder={'Пароль'}
+                                type={'text'}
+                                name={'password'}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.password}
+                              />
+                            </p>
+                            {touched.password && errors.password && <p className={'error'}>{errors.password}</p>}
+                            <Button
+                              variant="primary"
+                              disable={!isValid && !dirty}
+                              onClick={handleSubmit}
+                              type={'submit'}
+                            >
+                              Войти
+                            </Button>{' '}
+                          </div>
+                        )}
+                      </Formik>
+                    </FloatingLabel>
+                  </Form.Group>
+                </Form>
+              </Card.Body>
+              <Card.Footer>
+                <Link to="/signup">{'регистрация'}</Link>
+              </Card.Footer>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </>
+  );
+}
 
 export default Login;
